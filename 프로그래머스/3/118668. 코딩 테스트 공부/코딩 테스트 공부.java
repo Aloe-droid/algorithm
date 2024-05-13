@@ -1,53 +1,67 @@
 import java.util.*;
 
 class Solution {
-    static int minT, maxA, maxC;
+    static int maxX, maxY;
+    static int[][] maps;
+    static Queue<int[]> q;
     static int[][] problems;
     
-    public int solution(int alp, int cop, int[][] problems) throws Exception {
+    public int solution(int alp, int cop, int[][] problems) {
+        maxX = alp;
+        maxY = cop;
         Solution.problems = problems;
-        maxA = alp;
-        maxC = cop;
+        
+        // 가로: 알고력, 세로: 코딩력
         for(int[] problem : problems){
-            maxA = problem[0] > maxA ? problem[0] : maxA;
-            maxC = problem[1] > maxC ? problem[1] : maxC;
+            if(problem[0] > maxX) maxX = problem[0];
+            if(problem[1] > maxY) maxY = problem[1];
         }
         
-        int diffA = maxA - alp > 0 ? maxA - alp : 0;
-        int diffC = maxC - cop > 0 ? maxC - cop : 0;
+        maps = new int[maxX + 1][maxY + 1];
+        init(alp, cop);
         
-        minT = diffA + diffC;
-        for(int i = alp; i <= maxA; i++){
-            for(int j = cop; j <= maxC; j++){
-                int t = (i - alp) + (j - cop);
-                dfs(t, i, j);
+        
+        for(int i = alp; i <= maxX; i++){
+            for(int j = cop; j <= maxY; j++){
+                bfs(i, j);
             }
         }
-        
-        return minT;
+        return maps[maxX][maxY];
     }
     
-    public static void dfs(int t, int alp, int cop) throws Exception{
-        if(t >= minT) return;
-        
-        if(alp >= maxA && cop >= maxC){
-            minT = t;
-            return;
+    public static void init(int x, int y){
+        for(int i = x; i <= maxX; i++){
+            for(int j = y; j <= maxY; j++){
+                maps[i][j] = Math.abs(i - x) + Math.abs(j - y);
+            }
         }
+    }
+    
+    public static void bfs(int x, int y){
+        q = new LinkedList<>();
+        q.add(new int[] {x, y});
         
-        for(int i = 0; i < problems.length; i++){
-            int needA = problems[i][0] - alp > 0 ? problems[i][0] - alp : 0;
-            int needC = problems[i][1] - cop > 0 ? problems[i][1] - cop : 0;
+        while(!q.isEmpty()){
+            int px = q.peek()[0];
+            int py = q.poll()[1];
             
-            t += needA + needC + problems[i][4];
-            alp += needA + problems[i][2];
-            cop += needC + problems[i][3];
-            
-            dfs(t, alp, cop);
-            
-            t -= needA + needC + problems[i][4];
-            alp -= needA + problems[i][2];
-            cop -= needC + problems[i][3];
+            for(int[] problem : problems){
+                int nx = px + problem[2];
+                int ny = py + problem[3];
+                
+                if(nx > maxX) nx = maxX;
+                if(ny > maxY) ny = maxY;
+                
+                int alpha = 0;
+                if(px < problem[0]) alpha += problem[0] - px;
+                if(py < problem[1]) alpha += problem[1] - py;
+                alpha += problem[4];
+                
+                if(maps[nx][ny] > maps[px][py] + alpha){
+                    maps[nx][ny] = maps[px][py] + alpha;
+                    q.add(new int[] {nx, ny});
+                }
+            }
         }
     }
 }
