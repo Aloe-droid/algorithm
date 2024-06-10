@@ -3,21 +3,15 @@ import java.util.*;
 class Solution {
     public int solution(int[] a) {
         HashSet<Integer> hs = new HashSet<>();
-        TreeSet<Integer> ts1 = new TreeSet<>();
-        TreeSet<Integer> ts2 = new TreeSet<>();
+        int i1 = Integer.MAX_VALUE;
+        int i2 = Integer.MAX_VALUE;
         
-        ts1.add(a[0]);
-        for(int i = 1; i < a.length; i++) ts2.add(a[i]);
-        
-        hs.add(ts1.first());
-        hs.add(ts2.first());
-        
-        for(int i = 1; i < a.length - 1; i++){
-            ts1.add(a[i]);
-            ts2.remove(a[i]);
+        for(int i = 0; i < a.length; i++){
+            i1 = Math.min(i1, a[i]);
+            i2 = Math.min(i2, a[a.length - 1 - i]);
             
-            hs.add(ts1.first());
-            hs.add(ts2.first());
+            hs.add(i1);
+            hs.add(i2);
         }
         return hs.size();
     }
