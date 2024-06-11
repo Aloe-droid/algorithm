@@ -7,7 +7,6 @@ class Solution {
             sb.append(n % 3);
             n /= 3;
         }
-        
         return Integer.parseInt(sb.toString(), 3);
     }
 }
