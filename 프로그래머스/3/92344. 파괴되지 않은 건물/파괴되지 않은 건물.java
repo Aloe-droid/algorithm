@@ -15,7 +15,6 @@ class Solution {
             
             dp[skill[1] + 1][skill[2] + 1] += a;
             dp[skill[3] + 2][skill[4] + 2] += a;
-            
             dp[skill[1] + 1][skill[4] + 2] += b;
             dp[skill[3] + 2][skill[2] + 1] += b;
         }
