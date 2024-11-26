@@ -49,7 +49,7 @@ public class Main {
         }
 
         init();
-        if (mapDp[sX][sY] == Integer.MAX_VALUE) {
+        if (mapDp[sX][sY] == Integer.MAX_VALUE || mapDp[sX][sY] == 0) {
             System.out.println(-1);
             return;
         }
@@ -59,6 +59,7 @@ public class Main {
         }
 
         while (sX != eX || sY != eY) {
+
             // 1. 메두사 이동
             boolean isArrive = move();
             if (isArrive) break;
@@ -354,6 +355,7 @@ public class Main {
     }
 }
 
+
 class Place {
     int x, y;
     boolean isRoad;
@@ -366,6 +368,7 @@ class Place {
         soldierList = new ArrayList<>();
     }
 }
+
 
 class Soldier {
     int x, y, idx;
