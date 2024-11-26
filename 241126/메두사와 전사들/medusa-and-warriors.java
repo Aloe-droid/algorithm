@@ -249,7 +249,7 @@ public class Main {
                 int bias = 1;
                 for (int m = i - 1; m >= 0; m--) {
                     int startX, endX;
-                    if (j < sX) startX = j + bias;
+                    if (j < sX) startX = j - bias;
                     else startX = j;
 
                     if (j > sX) endX = j + bias;
@@ -284,7 +284,7 @@ public class Main {
                 int bias = 1;
                 for (int m = i + 1; m < N; m++) {
                     int startX, endX;
-                    if (j < sX) startX = j + bias;
+                    if (j < sX) startX = j - bias;
                     else startX = j;
 
                     if (j > sX) endX = j + bias;
