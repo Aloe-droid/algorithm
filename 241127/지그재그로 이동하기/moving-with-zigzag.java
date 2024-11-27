@@ -28,12 +28,11 @@ public class Main {
                 count += Math.abs(left - right);
                 k++;
             }
-
             left = right;
             right = A - (int) Math.pow(2, k);
 
             if(right <= B && B <= left){
-                count += Math.abs(B - right);
+                count += Math.abs(B - left);
                 break;
             }else{
                 count += Math.abs(left - right);
