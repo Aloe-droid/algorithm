@@ -5,7 +5,6 @@ public class Main {
     public static int N, S, E;
     public static List<List<Road>> list = new ArrayList<>();
     public static int[] dp;
-    public static boolean[] booleans;
     public static int max = 1_000_000_000;
 
     public static void main(String[] args) throws Exception {
@@ -13,7 +12,6 @@ public class Main {
         N = Integer.parseInt(br.readLine());
         int M = Integer.parseInt(br.readLine());
         dp = new int[N + 1];
-        booleans = new boolean[N + 1];
 
         for (int i = 0; i <= N; i++) {
             list.add(new ArrayList<>());
@@ -41,9 +39,8 @@ public class Main {
 
         while (!pq.isEmpty()) {
             Road road = pq.poll();
-            if(booleans[road.node]) continue;
-            booleans[road.node] = true;
-
+            if(road.weight > dp[road.node]) continue;
+            
             for (Road next : list.get(road.node)) {
                 if (dp[next.node] <= dp[road.node] + next.weight) continue;
                 dp[next.node] = dp[road.node] + next.weight;
