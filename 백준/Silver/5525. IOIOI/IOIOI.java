@@ -12,6 +12,11 @@ public class Main {
         List<Integer> list = new ArrayList<>();
         for (int i = 0; i < s.length(); i++) if (s.charAt(i) == 'I') list.add(i);
 
+        if(list.size() <= 1){
+            System.out.println(0);
+            return;
+        }
+        
         int cnt = 0;
         int temp = 0;
         int prev = list.get(0);
