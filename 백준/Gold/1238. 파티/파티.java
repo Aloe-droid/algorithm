@@ -1,45 +1,77 @@
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.*;
 
 class Main {
+    static int N, M, X, max = 1_000_000_000;
+    static List<List<Road>> forward, backward;
+    static PriorityQueue<Road> pq;
+    static int[] dpF, dpB;
+
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
-        int N = Integer.parseInt(st.nextToken());
-        int M = Integer.parseInt(st.nextToken());
-        int X = Integer.parseInt(st.nextToken());
-        int max = 1_000_000_000;
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+        X = Integer.parseInt(st.nextToken());
+        dpB = new int[N + 1];
+        dpF = new int[N + 1];
+        backward = new ArrayList<>();
+        forward = new ArrayList<>();
 
-        int[][] dp = new int[N + 1][N + 1];
-        for(int i = 0; i < M; i++){
+        for (int i = 0; i <= N; i++) {
+            forward.add(new ArrayList<>());
+            backward.add(new ArrayList<>());
+            dpF[i] = max;
+            dpB[i] = max;
+        }
+        dpF[X] = 0;
+        dpB[X] = 0;
+
+        for (int i = 0; i < M; i++) {
             st = new StringTokenizer(br.readLine());
             int x = Integer.parseInt(st.nextToken());
             int y = Integer.parseInt(st.nextToken());
             int t = Integer.parseInt(st.nextToken());
-            dp[x][y] = t;
+            forward.get(x).add(new Road(y, t));
+            backward.get(y).add(new Road(x, t));
         }
 
-        for(int i = 1; i <= N; i++){
-            for(int j = 1; j <= N; j++){
-                if(dp[i][j] == 0 && i != j) dp[i][j] = max;
+        pq = new PriorityQueue<>(Comparator.comparingInt(road -> road.weight));
+
+        pq.add(new Road(X, 0));
+        while(!pq.isEmpty()){
+            Road road = pq.poll();
+            if(dpF[road.node] < road.weight) continue;
+            for(Road next : forward.get(road.node)){
+                if(dpF[next.node] <= dpF[road.node] + next.weight) continue;
+                dpF[next.node] = dpF[road.node] + next.weight;
+                pq.add(new Road(next.node, dpF[next.node]));
             }
         }
 
-        for(int k = 1; k <= N; k++){
-            for(int i = 1; i <= N; i++){
-                for(int j = 1; j <= N; j++){
-                    if(i == j) continue;
-                    dp[i][j] = Math.min(dp[i][j], dp[i][k] + dp[k][j]);
-                }
+        pq.add(new Road(X, 0));
+        while(!pq.isEmpty()){
+            Road road = pq.poll();
+            if(dpB[road.node] < road.weight) continue;
+            for(Road next : backward.get(road.node)){
+                if(dpB[next.node] <= dpB[road.node] + next.weight) continue;
+                dpB[next.node] = dpB[road.node] + next.weight;
+                pq.add(new Road(next.node, dpB[next.node]));
             }
         }
 
-        int maxTime = -1;
-        for(int i = 1; i <= N; i++){
-            int time = dp[i][X] + dp[X][i];
-            maxTime = Math.max(time, maxTime);
-        }
+        int max = -1;
+        for(int i = 1; i <= N; i++) max = Math.max(max, dpF[i] + dpB[i]);
+        System.out.println(max);
+    }
+}
 
-        System.out.println(maxTime);
+class Road {
+    int node, weight;
+
+    public Road(int node, int weight) {
+        this.node = node;
+        this.weight = weight;
     }
 }
