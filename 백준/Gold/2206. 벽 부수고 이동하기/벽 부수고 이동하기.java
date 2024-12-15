@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.*;
 
 class Main {
-    static int N, M, max = 1_000_000_000;
+    static int N, M;
     static int[] dx = {-1, 1, 0, 0};
     static int[] dy = {0, 0, 1, -1};
     static int[][] ints;
@@ -20,14 +20,18 @@ class Main {
             String s = br.readLine();
             for(int j = 0; j < M; j++){
                 ints[i][j] = s.charAt(j) - '0';
-                Arrays.fill(dp[i][j], max);
             }
         }
 
         bfs();
 
-        if(dp[N - 1][M - 1][0] == max && dp[N - 1][M - 1][1] == max) System.out.println(-1);
-        else System.out.println(Math.min(dp[N - 1][M - 1][0], dp[N - 1][M - 1][1]));
+        int i1 = dp[N - 1][M - 1][0];
+        int i2 = dp[N - 1][M - 1][1];
+
+        if(i1 > 0 && i2 > 0) System.out.println(Math.min(i1, i2));
+        else if(i1 == 0 && i2 > 0) System.out.println(i2);
+        else if(i1 > 0 && i2 == 0) System.out.println(i1);
+        else System.out.println(-1);
     }
 
     public static void bfs(){
@@ -47,22 +51,17 @@ class Main {
                 if(nx < 0 || nx >= N || ny < 0 || ny >= M) continue;
 
                 // 벽을 뚫고 가는 경우
-                if(ints[nx][ny] == 1 && z == 0 && dp[x][y][z] + 1 < dp[nx][ny][1]){
+                if(ints[nx][ny] == 1 && z == 0 && dp[nx][ny][1] == 0){
                     dp[nx][ny][1] = dp[x][y][z] + 1;
                     q.add(new int[] {nx, ny, 1});
                 }
-                    
-                // 이미 벽을 뚫어서 기회가 없는 경우
-                if(ints[nx][ny] == 0 && z == 1 && dp[x][y][z] + 1 < dp[nx][ny][z]){
+
+                // 벽이 아닌 경우
+                if(ints[nx][ny] == 0 && dp[nx][ny][z] == 0){
                     dp[nx][ny][z] = dp[x][y][z] + 1;
                     q.add(new int[] {nx, ny, z});
                 }
 
-                // 벽을 뚫지도 않고, 다음도 벽이 아닌 경우
-                if(ints[nx][ny] == 0 && z == 0 && dp[x][y][z] + 1 < dp[nx][ny][z]){
-                    dp[nx][ny][z] = dp[x][y][z] + 1;
-                    q.add(new int[] {nx, ny, z});
-                }
             }
         }
     }
