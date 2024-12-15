@@ -4,7 +4,7 @@ import java.util.*;
 class Main {
     static List<List<Road>> list;
     static int[] dp;
-    static int ans = 0, max = 1_000_000_000;
+    static int max = 1_000_000_000;
     public static void main(String[] args)throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int N = Integer.parseInt(br.readLine());
@@ -22,10 +22,23 @@ class Main {
             list.get(y).add(new Road(x, z));
         }
 
-        for(int i = 1; i <= N; i++){
+        Arrays.fill(dp, max);
+        dp[1] = 0;
+        dfs(1, 0);
+
+        int dst = 0;
+        for(int i = 1; i <= N; i++) dst = Math.max(dst, dp[i]);
+
+        List<Integer> temp = new ArrayList<>();
+        for(int i = 1; i <= N; i++) if(dp[i] == dst) temp.add(i);
+
+        int ans = 0;
+        for(int idx : temp) {
             Arrays.fill(dp, max);
-            dp[i] = 0;
-            dfs(i, 0);
+            dp[idx] = 0;
+            dfs(idx, 0);
+
+            for(int i = 1; i <= N; i++) ans = Math.max(ans, dp[i]);
         }
 
         System.out.println(ans);
@@ -37,8 +50,6 @@ class Main {
         for(Road next : list.get(node)){
             if(dp[next.node] <= dp[node] + next.weight) continue;
             dp[next.node] = dp[node] + next.weight;
-
-            ans = Math.max(ans, dp[next.node]);
             dfs(next.node, dp[next.node]);
         }
     }
