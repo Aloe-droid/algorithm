@@ -23,9 +23,7 @@ class Main {
             list.get(x).add(new Road(y, z));
             list.get(y).add(new Road(x, z));
         }
-
-        int maxIdx = find();
-        System.out.println(calculateMST(maxIdx));
+        System.out.println(find());
     }
 
     public static int find() {
@@ -33,44 +31,21 @@ class Main {
         visited = new boolean[N + 1];
         pq.add(new Road(1, 0));
 
-        int max = -1;
-        int maxIdx = -1;
-
-        while (!pq.isEmpty()) {
-            Road road = pq.poll();
-            if (visited[road.node]) continue;
-            visited[road.node] = true;
-
-            if (road.weight > max) {
-                max = road.weight;
-                maxIdx = road.node;
-            }
-
-            for (Road next : list.get(road.node)) {
-                if (!visited[next.node]) pq.add(next);
-            }
-        }
-        return maxIdx;
-    }
-
-    public static int calculateMST(int x) {
-        Arrays.fill(visited, false);
-        pq.add(new Road(1, 0));
-        pq.add(new Road(x, 0));
-
         int sum = 0;
+        int max = 0;
 
         while (!pq.isEmpty()) {
             Road road = pq.poll();
             if (visited[road.node]) continue;
             visited[road.node] = true;
             sum += road.weight;
+            max = Math.max(max, road.weight);
 
             for (Road next : list.get(road.node)) {
                 if (!visited[next.node]) pq.add(next);
             }
         }
-        return sum;
+        return sum - max;
     }
 }
 
