@@ -4,23 +4,18 @@ import java.util.*;
 class Main {
     static int N, M;
     static List<List<Road>> list;
-    static int[] mst;
+    static boolean[] visited;
     static PriorityQueue<Road> pq;
-    public static void main(String[] args)throws Exception{
+
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
-        pq = new PriorityQueue<>(Comparator.comparingInt(r -> r.weight));
+
         list = new ArrayList<>();
-        mst = new int[N + 1];
-
-        for(int i = 0; i <= N; i++){
-            list.add(new ArrayList<>());
-            mst[i] = -1;
-        }
-
-        for(int i = 0; i < M; i++){
+        for (int i = 0; i <= N; i++) list.add(new ArrayList<>());
+        for (int i = 0; i < M; i++) {
             st = new StringTokenizer(br.readLine());
             int x = Integer.parseInt(st.nextToken());
             int y = Integer.parseInt(st.nextToken());
@@ -29,60 +24,60 @@ class Main {
             list.get(y).add(new Road(x, z));
         }
 
-        int x = find();
-        System.out.println(split(x));
+        int maxIdx = find();
+        System.out.println(calculateMST(maxIdx));
     }
 
-    public static int find(){
+    public static int find() {
+        pq = new PriorityQueue<>(Comparator.comparingInt(r -> r.weight));
+        visited = new boolean[N + 1];
         pq.add(new Road(1, 0));
-
-        while(!pq.isEmpty()){
-            Road road = pq.poll();
-            if(mst[road.node] != -1) continue;
-            mst[road.node] = road.weight;
-
-            for(Road next : list.get(road.node)){
-                if(mst[next.node] != -1) continue;
-                pq.add(next);
-            }
-        }
 
         int max = -1;
         int maxIdx = -1;
-        for(int i = 1; i <= N; i++){
-            if(mst[i] > max) {
-                max = mst[i];
-                maxIdx = i;
+
+        while (!pq.isEmpty()) {
+            Road road = pq.poll();
+            if (visited[road.node]) continue;
+            visited[road.node] = true;
+
+            if (road.weight > max) {
+                max = road.weight;
+                maxIdx = road.node;
+            }
+
+            for (Road next : list.get(road.node)) {
+                if (!visited[next.node]) pq.add(next);
             }
         }
         return maxIdx;
     }
 
-    public static int split(int x){
-        Arrays.fill(mst, -1);
+    public static int calculateMST(int x) {
+        Arrays.fill(visited, false);
         pq.add(new Road(1, 0));
         pq.add(new Road(x, 0));
 
-        while(!pq.isEmpty()){
-            Road road = pq.poll();
-            if(mst[road.node] != -1) continue;
-            mst[road.node] = road.weight;
+        int sum = 0;
 
-            for(Road next : list.get(road.node)){
-                if(mst[next.node] != -1) continue;
-                pq.add(next);
+        while (!pq.isEmpty()) {
+            Road road = pq.poll();
+            if (visited[road.node]) continue;
+            visited[road.node] = true;
+            sum += road.weight;
+
+            for (Road next : list.get(road.node)) {
+                if (!visited[next.node]) pq.add(next);
             }
         }
-
-        int sum = 0;
-        for(int i = 1; i <= N; i++) sum += mst[i];
         return sum;
     }
 }
 
 class Road {
     int node, weight;
-    public Road(int node, int weight){
+
+    public Road(int node, int weight) {
         this.node = node;
         this.weight = weight;
     }
