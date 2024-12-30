@@ -41,18 +41,14 @@ class Main {
             idx++;
         }
 
-        int[][] dp = new int[ints.length + 1][K + 1];
-        for(int i = 1; i <= ints.length; i++) {
-            int v = ints[i - 1][0];
-            int w = ints[i - 1][1];
-
-            for(int j = 1; j <= K; j++) {
-                dp[i][j] = Math.max(dp[i][j], dp[i - 1][j]);
-                if(j >= v) dp[i][j] = Math.max(dp[i][j], dp[i - 1][j - v] + w);
+        int[] dp = new int[K + 1];
+        for (int[] anInt : ints) {
+            for (int j = K; j >= anInt[0]; j--) {
+                dp[j] = Math.max(dp[j], dp[j - anInt[0]] + anInt[1]);
             }
         }
 
-        System.out.println(dp[ints.length][K - 1]);
+        System.out.println(dp[K - 1]);
     }
 
     public static int find(int k){
