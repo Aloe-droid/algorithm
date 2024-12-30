@@ -15,14 +15,12 @@ class Main {
         for(int i = 0; i < N; i++) {
             String s = br.readLine();
             for(int j = 0; j < M; j++){
-                char c = s.charAt(j);
-                union(i * M + j, getD(i, j, c));
+                union(i * M + j, getD(i, j, s.charAt(j)));
             }
         }
 
-        for(int i = 0; i < N * M; i++) find(i);
         Set<Integer> hs = new HashSet<>();
-        for(int i = 0; i < N * M; i++) hs.add(p[i]);
+        for(int i = 0; i < N * M; i++) hs.add(find(i));
         System.out.println(hs.size());
     }
 
