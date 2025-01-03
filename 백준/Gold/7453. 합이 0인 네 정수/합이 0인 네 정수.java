@@ -51,7 +51,7 @@ class Main {
 
                 cnt += temp1 * temp2;
                 // 아무거나 변화
-                i1++;
+                i2--;
             }
         }
         System.out.println(cnt);
