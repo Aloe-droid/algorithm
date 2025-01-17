@@ -55,9 +55,9 @@ class Main {
                 if(ints[kO[o2].i] == 2) cnt += 1;
                 o2 += 1;
             }
-            
+
             if(cnt > 0) max = Math.max(max, cnt);
-            index++;
+            while(index < N && kH[index].v == st) index++;
         }
 
         System.out.println(max);
