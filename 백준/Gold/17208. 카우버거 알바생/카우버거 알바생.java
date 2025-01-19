@@ -22,9 +22,7 @@ class Main {
                 }
             }
         }
-
-        for(int[] d : dp) for(int p : d) max = Math.max(max, p);
-        System.out.println(max);
+        System.out.println(dp[M][K]);
     }
 
 }
