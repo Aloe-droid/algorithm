@@ -1,6 +1,5 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Main {
     static int N;
@@ -38,7 +37,6 @@ public class Main {
             if (nx < 0 || nx >= N || ny < 0 || ny >= M || ints[x][y] <= ints[nx][ny]) continue;
             dp[x][y] += dfs(nx, ny);
         }
-
         return dp[x][y];
     }
 }
