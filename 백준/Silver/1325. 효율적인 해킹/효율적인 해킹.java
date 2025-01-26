@@ -30,7 +30,13 @@ class Main {
         cnt = new int[N + 1];
 
         int max = 0;
-        for(int i = 1; i <= N; i++) max = Math.max(max, bfs(i));
+        for(int i = 1; i <= N; i++) {
+            Arrays.fill(visit, false);
+            visit[i] = true;
+            cnt[i] += 1;
+            dfs(i, i);
+            max = Math.max(max, cnt[i]);
+        }
 
         StringBuilder sb = new StringBuilder();
         for (int i = 1; i <= N; i++) {
@@ -39,23 +45,12 @@ class Main {
         System.out.println(sb);
     }
 
-    public static int bfs(int k) {
-        Arrays.fill(visit, false);
-
-        visit[k] = true;
-        q.add(k);
-        cnt[k] += 1;
-
-        while (!q.isEmpty()) {
-            int x = q.poll();
-            for(int nx : list.get(x)) {
-                if(visit[nx]) continue;
-                visit[nx] = true;
-                q.add(nx);
-                cnt[k] += 1;
-            }
+    public static void dfs(int k, int x) {
+        for(int nx : list.get(x)) {
+            if (visit[nx]) continue;
+            visit[nx] = true;
+            cnt[k] += 1;
+            dfs(k, nx);
         }
-
-        return cnt[k];
     }
 }
