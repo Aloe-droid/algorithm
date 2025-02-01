@@ -18,11 +18,8 @@ class Main {
             bags[i] = Integer.parseInt(br.readLine());
 
         }
-        Arrays.sort(jewels, (j1, j2) -> {
-           if(j1.m == j2.m) return j2.v - j1.v;
-           else return j1.m - j2.m;
-        });
-
+        
+        Arrays.sort(jewels, Comparator.comparingInt(j -> j.m));
         Arrays.sort(bags);
 
         PriorityQueue<Integer> pq = new PriorityQueue<>(Comparator.reverseOrder());
