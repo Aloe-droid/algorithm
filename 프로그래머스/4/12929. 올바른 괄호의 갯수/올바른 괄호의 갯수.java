@@ -1,12 +1,8 @@
-import java.util.*;
-
 class Solution {
     static int N, cnt = 0;
-    static int[] ints;
     
     public int solution(int n) {
         N = n * 2;
-        ints = new int[N];
         dfs(0, 0);
         return cnt;
     }
