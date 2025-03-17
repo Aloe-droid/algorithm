@@ -43,6 +43,6 @@ class Seller {
     public void setPrice(int price) {
         int tax = price / 10;
         total += price - tax;
-        if(ref != null) ref.setPrice(tax);
+        if(ref != null && tax != 0) ref.setPrice(tax);
     }
 }
