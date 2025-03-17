@@ -1,7 +1,5 @@
-import java.util.WeakHashMap;
-
 class Solution {
-    int N, M, min = Integer.MAX_VALUE;
+    int N, M;
     int[] a, b, dx = {1, -1, 0, 0}, dy = {0, 0, 1, -1};
     int[][] board;
     public int solution(int[][] board, int[] a, int[] b) {
