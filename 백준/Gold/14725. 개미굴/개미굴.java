@@ -19,20 +19,8 @@ class Main {
             Word word = init;
             for(int j = 0; j < K; j++) {
                 String s = st.nextToken();
-                Word w = null;
-                for(Word nxt : word.next) {
-                    if(nxt.s.equals(s)) {
-                        w = nxt;
-                        break;
-                    }
-                }
-
-                if(w == null) {
-                    w = new Word(s);
-                    word.next.add(w);
-                }
-
-                word = w;
+                if(!word.next.containsKey(s)) word.next.put(s, new Word(s));
+                word = word.next.get(s);
             }
         }
 
@@ -46,18 +34,18 @@ class Main {
             sb.append(depth).append(word.s).append("\n");
         }
 
-        for(Word next : word.next) {
-            print(next, cnt + 1);
+        for(String s : word.next.keySet()) {
+            print(word.next.get(s), cnt + 1);
         }
     }
 }
 
 class Word {
     String s;
-    Set<Word> next;
+    Map<String, Word> next;
 
     public Word(String s) {
         this.s = s;
-        next = new TreeSet<>(Comparator.comparing(w -> w.s));
+        next = new TreeMap<>();
     }
 }
