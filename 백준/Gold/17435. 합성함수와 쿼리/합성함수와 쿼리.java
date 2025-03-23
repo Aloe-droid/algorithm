@@ -32,14 +32,17 @@ class Main {
     }
 
     public static int query(int n, int x) {
-        while (n > 0) {
-            int k = 0;
-            while ((int) Math.pow(2, k) <= n) k++;
-            k--;
+        if (n == 0) return x;
 
-            x = table[x][k];
-            n -= (int) Math.pow(2, k);
+        int p = 1;
+        int k = 0;
+        while(p <= n) {
+            p *= 2;
+            k++;
         }
-        return x;
+        k--;
+        p /= 2;
+
+        return query(n - p, table[x][k]);
     }
 }
