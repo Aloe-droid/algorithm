@@ -3,17 +3,20 @@ import java.util.*;
 
 class Main {
     static int N;
-    static int[] time, inDegrees, sum;
+    static int[] time, dp;
     static List<List<Integer>> list;
-    static LinkedList<Integer> q;
     
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         N = Integer.parseInt(br.readLine());
+        dp = new int[N + 1];
         time = new int[N + 1];
-        inDegrees = new int[N + 1];
         list = new ArrayList<>();
-        for(int i = 0; i <= N; i++) list.add(new ArrayList<>());
+        
+        for(int i = 0; i <= N; i++) {
+            list.add(new ArrayList<>());
+            dp[i] = -1;
+        }
 
         for(int i = 1 ; i <= N; i++) {
             StringTokenizer st = new StringTokenizer(br.readLine());
@@ -23,36 +26,23 @@ class Main {
             int J = Integer.parseInt(st.nextToken());
             for(int j = 0; j < J; j++) {
                 int in = Integer.parseInt(st.nextToken());
-                inDegrees[i]++;
                 list.get(in).add(i);
             }
         }
 
-        System.out.println(bfs());
+        int max = 0;
+        for(int i = 1; i <= N; i++) max = Math.max(max, dfs(i));
+        System.out.println(max);
     }
 
-    public static int bfs() {
-        sum = new int[N + 1];
-        q = new LinkedList<>();
+    public static int dfs(int x) {
+        if(dp[x] != -1) return dp[x];
 
-        for(int i = 1; i <= N; i++) {
-            if(inDegrees[i] == 0) {
-                q.add(i);
-                sum[i] = time[i];
-            }
-        }
-
+        dp[x] = time[x];
         int max = 0;
-        while(!q.isEmpty()) {
-            int x = q.poll();
-            max = Math.max(max, sum[x]);
-
-            for(int nx : list.get(x)) {
-                inDegrees[nx]--;
-                sum[nx] = Math.max(sum[nx], sum[x] + time[nx]);
-                if(inDegrees[nx] == 0) q.add(nx);
-            }
+        for(int nx : list.get(x)) {
+            max = Math.max(max, dfs(nx));
         }
-        return max;
+        return dp[x] += max;
     }
 }
