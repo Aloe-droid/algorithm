@@ -10,15 +10,15 @@ int dy[] = {1, -1, 0, 0};
 void bfs() {
     int q1[100 * 100 + 1] = {0};
     int q2[100 * 100 + 1] = {0};
-    int q3[100 * 100 + 1] = {1};
     int st = 0, ed = 0;
 
     q1[ed] = 0;
     q2[ed++] = 0;
+    dp[0][0] = 1;
+
     while (st < ed) {
         const int x = q1[st];
         const int y = q2[st];
-        dp[x][y] = q3[st];
         st++;
 
         for (int i = 0; i < 4; i++) {
@@ -29,8 +29,7 @@ void bfs() {
 
             dp[nx][ny] = dp[x][y] + 1;
             q1[ed] = nx;
-            q2[ed] = ny;
-            q3[ed++] = dp[x][y] + 1;
+            q2[ed++] = ny;
         }
     }
 }
