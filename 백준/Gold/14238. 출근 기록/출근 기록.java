@@ -1,44 +1,57 @@
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 class Main {
-    static int N;
-    static int[] ints;
-    static boolean[][][][][] dp;
-    static char[] chars;
+    static int[] works;
+    static char[] ans;
+    static boolean[][][][][] check;
+    static boolean flag = false;
 
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String s = br.readLine();
-        N = s.length();
-        ints = new int[3];
-        for(int i = 0; i < s.length(); i++) ints[s.charAt(i) - 'A']++;
-        dp = new boolean[N + 1][N + 1][N + 1][3][3];
-        chars = new char[N];
-        boolean flag = dfs(0, 0, 0, 0, 0);
-        System.out.println(flag ? new String(chars) : -1);
+        works = new int[3];
+        char[] chars = br.readLine().toCharArray();
+        for (char c : chars) works[c - 'A'] += 1;
+
+        ans = new char[chars.length];
+        check = new boolean[works[0] + 1][works[1] + 1][works[2] + 1][3][3];
+
+        dfs(0, 0, 0);
+        System.out.println(flag ? String.valueOf(ans) : -1);
     }
 
-    public static boolean dfs(int a, int b, int c, int pp, int p) {
-        if(a == ints[0] && b == ints[1] && c == ints[2]) return true;
-        if(dp[a][b][c][pp][p]) return false;
-
-        dp[a][b][c][pp][p] = true;
-
-        if(a < ints[0]) {
-            chars[a + b + c] = 'A';
-            if(dfs(a + 1, b, c, p, 0)) return true;
+    // 해당 시간에 A, B, C 중에 하나가 있다는 것 == 이미 탐색했다는 것 ㅋ
+    public static void dfs(int day, int pp, int p) {
+        if (day == ans.length) {
+            flag = true;
+            return;
         }
 
-        if(b < ints[1] && p != 1) {
-            chars[a + b + c] = 'B';
-            if(dfs(a, b + 1, c, p, 1)) return true;
+        // A
+        if (works[0] > 0 && !flag && !check[works[0] - 1][works[1]][works[2]][pp][p]) {
+            works[0] -= 1;
+            check[works[0]][works[1]][works[2]][pp][p] = true;
+            ans[day] = 'A';
+            dfs(day + 1, p, 0);
+            works[0] += 1;
         }
 
-        if(c < ints[2] && pp != 2 && p != 2) {
-            chars[a + b + c] = 'C';
-            if(dfs(a, b, c + 1, p, 2)) return true;
+        // B
+        if (p != 1 && works[1] > 0 && !flag && !check[works[0]][works[1] - 1][works[2]][pp][p]) {
+            works[1] -= 1;
+            check[works[0]][works[1]][works[2]][pp][p] = true;
+            ans[day] = 'B';
+            dfs(day + 1, p, 1);
+            works[1] += 1;
         }
 
-        return false;
+        // C
+        if (p != 2 && pp != 2 && works[2] > 0 && !flag && !check[works[0]][works[1]][works[2] - 1][pp][p]) {
+            works[2] -= 1;
+            check[works[0]][works[1]][works[2]][pp][p] = true;
+            ans[day] = 'C';
+            dfs(day + 1, p, 2);
+            works[2] += 1;
+        }
     }
 }
