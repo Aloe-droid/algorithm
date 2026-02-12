@@ -5,7 +5,7 @@ import java.util.*;
 public class Main {
     static int N, M;
     static Product[] products;
-    static List<Set<Integer>> productLists;
+    static List<List<String>> productLists;
 
 
     public static void main(String[] args) throws Exception {
@@ -17,18 +17,22 @@ public class Main {
         productLists = new ArrayList<>();
         for (int i = 0; i <= N; i++) {
             products[i] = new Product();
-            productLists.add(new HashSet<>());
+            productLists.add(new ArrayList<>());
         }
 
         for (int i = 0; i < M; i++) {
             String[] ss = br.readLine().split(" ");
             int k = Integer.parseInt(ss[ss.length - 1]);
-            Set<Integer> hs = new HashSet<>();
+            List<Integer> temp = new ArrayList<>();
             for (int j = 1; j < ss.length - 1; j++) {
-                hs.add(Integer.parseInt(ss[j]));
+                temp.add(Integer.parseInt(ss[j]));
             }
-            products[k].needs.add(hs);
-            for (int kk : hs) productLists.get(kk).add(k);
+
+            // N번째 인덱스에 inDegree가 있음
+            List<Integer> inDegrees = products[k].inDegrees;
+            inDegrees.add(temp.size());
+            String key = k + "/" + (inDegrees.size() - 1);
+            for (int t : temp) productLists.get(t).add(key);
         }
 
         int K = Integer.parseInt(br.readLine());
@@ -44,25 +48,23 @@ public class Main {
 
     public static boolean[] find(List<Integer> init) {
         boolean[] check = new boolean[N + 1];
-        Queue<Integer> q = new LinkedList<>();
-        for (int i : init) {
-            check[i] = true;
-            q.add(i);
-        }
+        Queue<Integer> q = new LinkedList<>(init);
 
         while (!q.isEmpty()) {
             int n = q.poll();
+            if (check[n]) continue;
+
             check[n] = true;
-            Set<Integer> productIdList = productLists.get(n);
-            for (int id : productIdList) {
-                Product product = products[id];
-                for (Set<Integer> need : product.needs) {
-                    need.remove(n);
-                    if (need.isEmpty()) {
-                        products[id].needs.clear();
-                        q.add(id);
-                        break;
-                    }
+            List<String> productIdList = productLists.get(n);
+            for (String s : productIdList) {
+                StringTokenizer st = new StringTokenizer(s, "/");
+                int id = Integer.parseInt(st.nextToken());
+                int index = Integer.parseInt(st.nextToken());
+                int value = products[id].inDegrees.get(index) - 1;
+                products[id].inDegrees.set(index, value);
+
+                if (products[id].inDegrees.get(index) == 0) {
+                    q.add(id);
                 }
             }
         }
@@ -83,9 +85,9 @@ public class Main {
 }
 
 class Product {
-    List<Set<Integer>> needs;
+    List<Integer> inDegrees;
 
     public Product() {
-        needs = new ArrayList<>();
+        inDegrees = new ArrayList<>();
     }
 }
