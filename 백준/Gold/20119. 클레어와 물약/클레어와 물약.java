@@ -5,8 +5,8 @@ import java.util.*;
 public class Main {
     static int N, M;
     static Product[] products;
-    static List<List<String>> productLists;
-
+    static List<List<Long>> productLists; 
+    static final long OFFSET = 200001L; 
 
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -28,10 +28,9 @@ public class Main {
                 temp.add(Integer.parseInt(ss[j]));
             }
 
-            // N번째 인덱스에 inDegree가 있음
             List<Integer> inDegrees = products[k].inDegrees;
             inDegrees.add(temp.size());
-            String key = k + "/" + (inDegrees.size() - 1);
+            long key = (long)k * OFFSET + (inDegrees.size() - 1);
             for (int t : temp) productLists.get(t).add(key);
         }
 
@@ -55,11 +54,11 @@ public class Main {
             if (check[n]) continue;
 
             check[n] = true;
-            List<String> productIdList = productLists.get(n);
-            for (String s : productIdList) {
-                StringTokenizer st = new StringTokenizer(s, "/");
-                int id = Integer.parseInt(st.nextToken());
-                int index = Integer.parseInt(st.nextToken());
+            List<Long> productIdList = productLists.get(n); 
+            for (long key : productIdList) {               
+                int id = (int)(key / OFFSET);          
+                int index = (int)(key % OFFSET);         
+                
                 int value = products[id].inDegrees.get(index) - 1;
                 products[id].inDegrees.set(index, value);
 
